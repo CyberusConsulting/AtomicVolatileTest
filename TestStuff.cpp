@@ -69,7 +69,7 @@ void read_volatile_counter(int id) {
 int main() {
 
     uint64_t time_start = 0;
-    uint64_t time_elapsed =0;
+    uint64_t time_elapsed = 0;
 
     // ATOMIC
     std::vector<std::thread> read_threads_atomic;
