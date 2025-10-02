@@ -8,7 +8,7 @@
 //-----------------------------------------------
 // Volatile vs. Atomic Test
 //-----------------------------------------------
-int num_reads = 1000000;
+int num_reads = 10000000;
 int num_writes = 10000000;
 const int num_threads = 5;
 volatile uint32_t volatile_counter = 0;
@@ -80,8 +80,8 @@ int main() {
         read_threads_atomic.emplace_back(read_atomic_counter, (t+1));
     }
     for (std::thread& t : read_threads_atomic) { t.join(); }
-    write_thread_atomic.join();
     time_elapsed = get_micro_time() - time_start;
+    write_thread_atomic.join();
     printf("time_elapsed ATOMIC   = %lld us\n", time_elapsed);
 
     // VOLATILE
@@ -93,8 +93,8 @@ int main() {
         read_threads_volatile.emplace_back(read_volatile_counter, (t+1));
     }
     for (std::thread& t : read_threads_volatile) { t.join(); }
-    write_thread_volatile.join();
     time_elapsed = get_micro_time() - time_start;
+    write_thread_volatile.join();
     printf("time_elapsed VOLATILE = %lld us\n", time_elapsed);
 
     return 0;
