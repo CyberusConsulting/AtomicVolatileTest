@@ -8,8 +8,8 @@
 //-----------------------------------------------
 // Volatile vs. Atomic Test
 //-----------------------------------------------
-int num_reads = 10000000;
-int num_writes = 10000000;
+int num_reads = 20000000;
+int num_writes = 20000000;
 const int num_threads = 5;
 volatile uint32_t volatile_counter = 0;
 std::atomic<uint32_t> atomic_counter(0);
