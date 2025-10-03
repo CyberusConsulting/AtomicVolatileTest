@@ -1,6 +1,13 @@
 
-#define WIN32_LEAN_AND_MEAN			// Exclude rarely-used stuff from Windows headers
-#include <windows.h>
+#ifdef _WIN32
+    #define WIN32_LEAN_AND_MEAN     // Exclude rarely-used stuff from Windows headers
+    #include <windows.h>
+#else
+    #include <sys/time.h>
+    #include <string.h>
+    #include <stdlib.h>
+#endif
+
 #include <vector>
 #include <atomic>
 #include <thread>
@@ -17,12 +24,19 @@ std::atomic<uint32_t> atomic_counter(0);
 //-----------------------------------------------
 uint64_t get_micro_time() {
 
+#ifdef _WIN32
     LARGE_INTEGER iTime, iFrequency;
     QueryPerformanceFrequency(&iFrequency);
     QueryPerformanceCounter(&iTime);
     iTime.QuadPart *= 1000000;
     iTime.QuadPart /= iFrequency.QuadPart;
     return (uint64_t)iTime.QuadPart;
+#else
+    struct timeval tv;
+    gettimeofday(&tv, 0);
+    return ((long long)tv.tv_sec * 1000000) + tv.tv_usec;
+#endif
+
 }
 
 //-----------------------------------------------
@@ -31,6 +45,10 @@ void write_atomic_counter() {
     uint32_t val = 0;
     for (int i=0; i<num_writes; i++) {
         val = atomic_counter.fetch_add(1, std::memory_order_relaxed);
+        //atomic_counter.store(val++, std::memory_order_relaxed);
+        //val = atomic_counter++;
+        //atomic_counter.fetch_add(1, std::memory_order_relaxed);
+        //val = atomic_counter.load(std::memory_order_relaxed);
     }
     //printf("[1] Value ATOMIC WRITE = %d\n", val);
 }
@@ -82,7 +100,7 @@ int main() {
     for (std::thread& t : read_threads_atomic) { t.join(); }
     time_elapsed = get_micro_time() - time_start;
     write_thread_atomic.join();
-    printf("time_elapsed ATOMIC   = %lld us\n", time_elapsed);
+    printf("time_elapsed ATOMIC   = %llu us\n", time_elapsed);
 
     // VOLATILE
     std::vector<std::thread> read_threads_volatile;
@@ -95,7 +113,7 @@ int main() {
     for (std::thread& t : read_threads_volatile) { t.join(); }
     time_elapsed = get_micro_time() - time_start;
     write_thread_volatile.join();
-    printf("time_elapsed VOLATILE = %lld us\n", time_elapsed);
+    printf("time_elapsed VOLATILE = %llu us\n", time_elapsed);
 
     return 0;
 }
