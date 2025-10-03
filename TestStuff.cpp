@@ -45,10 +45,9 @@ void write_atomic_counter() {
     uint32_t val = 0;
     for (int i=0; i<num_writes; i++) {
         val = atomic_counter.fetch_add(1, std::memory_order_relaxed);
-        //atomic_counter.store(val++, std::memory_order_relaxed);
         //val = atomic_counter++;
-        //atomic_counter.fetch_add(1, std::memory_order_relaxed);
         //val = atomic_counter.load(std::memory_order_relaxed);
+        //atomic_counter.store(val+1, std::memory_order_relaxed);
     }
     //printf("[1] Value ATOMIC WRITE = %d\n", val);
 }
