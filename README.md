@@ -4,3 +4,4 @@
 - /std:c++20 /O2 /Oi /Ot
 
 ![Screenshot](https://github.com/CyberusConsulting/AtomicVolatileTest/raw/main/results.png)
+![Screenshot](https://github.com/CyberusConsulting/AtomicVolatileTest/raw/main/results-2.png)
